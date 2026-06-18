@@ -95,13 +95,31 @@ export default function DashboardScreen({ navigation }: any) {
           </TouchableOpacity>
         </View>
 
-        <View className="bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-lg mb-6 items-center">
+        <View className="bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-lg mb-4 items-center">
           <Text className="text-slate-400 font-medium mb-4 uppercase tracking-widest text-xs">Live Trust Score</Text>
           <View className="w-32 h-32 rounded-full border-8 border-green-500/20 items-center justify-center relative">
             <View className="absolute inset-0 rounded-full border-8 border-green-500 border-t-transparent" style={{ transform: [{ rotate: '45deg' }] }}></View>
             <Text className="text-5xl font-bold text-white">{trustScore}</Text>
           </View>
           <Text className="text-green-400 font-medium mt-4">Zero Trust Enabled</Text>
+        </View>
+
+        <View className="flex-row justify-between mb-6 space-x-4">
+          <View className="flex-1 bg-slate-900 p-4 rounded-3xl border border-slate-800 shadow-lg items-center">
+            <View className="w-12 h-12 bg-indigo-500/10 rounded-full items-center justify-center mb-3">
+              <Text className="text-indigo-400 text-xl">🛡️</Text>
+            </View>
+            <Text className="text-white font-bold text-sm text-center">Device Trust</Text>
+            <Text className="text-slate-400 text-xs text-center mt-1">Trusted hardware detected.</Text>
+          </View>
+
+          <View className="flex-1 bg-slate-900 p-4 rounded-3xl border border-slate-800 shadow-lg items-center">
+            <View className="w-12 h-12 bg-amber-500/10 rounded-full items-center justify-center mb-3">
+              <Text className="text-amber-400 text-xl">⚡</Text>
+            </View>
+            <Text className="text-white font-bold text-sm text-center">Continuous Monitoring</Text>
+            <Text className="text-slate-400 text-xs text-center mt-1">Risk engine evaluating.</Text>
+          </View>
         </View>
 
         <View className="bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-lg mb-6">
