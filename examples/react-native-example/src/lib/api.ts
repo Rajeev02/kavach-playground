@@ -1,9 +1,10 @@
 import { Platform } from 'react-native';
 
-// Handle Android Emulator localhost mapping
-export const API_BASE_URL = Platform.OS === 'android' 
+// In Expo, if we're on a physical device, localhost won't work.
+// Use process.env.EXPO_PUBLIC_API_URL or fallback to computer's IP address.
+export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || (Platform.OS === 'android' 
   ? 'http://10.0.2.2:4000/api'
-  : 'http://localhost:4000/api';
+  : 'http://localhost:4000/api');
 
 export async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   const token = undefined; // We'll manage this in AsyncStorage or context later if needed
@@ -22,10 +23,19 @@ export async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     headers,
   });
 
-  const data = await response.json().catch(() => ({}));
+  let text = '';
+  const data = await response.text().then(t => {
+    text = t;
+    try {
+      return JSON.parse(t);
+    } catch {
+      return {};
+    }
+  }).catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data.message || 'API Request Failed');
+    const fallbackMessage = text ? `API Error (${response.status}): ${text.substring(0, 50)}` : `API Request Failed (${response.status})`;
+    throw new Error(data.error || data.message || fallbackMessage);
   }
 
   return data;
