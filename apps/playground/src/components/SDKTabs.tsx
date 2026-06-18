@@ -16,6 +16,16 @@ export const SDKTabs = () => {
   const workspaceId = user?.workspaceId || 'YOUR_WORKSPACE_ID';
   const apiKey = user?.workspaceId || 'YOUR_API_KEY';
 
+  const registryLinks: Record<string, string> = {
+    'Web': 'https://www.npmjs.com/package/@rajeev02/kavach-web',
+    'React Native': 'https://www.npmjs.com/package/@rajeev02/kavach-react-native',
+    'iOS': 'https://cocoapods.org/pods/KavachSDK',
+    'Android': 'https://repo1.maven.org/maven2/io/github/rajeev02/kavach/kavach-android/1.0.4/',
+    'Python': 'https://pypi.org/project/rajeev02-kavach-sdk/',
+    'Go': 'https://pkg.go.dev/github.com/rajeev02/kavach-go',
+    'Flutter': 'https://pub.dev/packages/kavach_flutter'
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto mt-8">
       <div className="flex space-x-1 rounded-xl bg-slate-900 p-1 border border-slate-800 overflow-x-auto">
@@ -233,7 +243,18 @@ await kavach.initialize();`}
             </>
           )}
         </div>
-        <div className="mt-4 pt-4 border-t border-slate-800 flex justify-end">
+        <div className="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center">
+          <a 
+            href={registryLinks[activeTab]}
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-slate-400 hover:text-white flex items-center transition-colors"
+          >
+            <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            View on Registry
+          </a>
           <a 
             href={`https://github.com/Rajeev02/kavach-playground/tree/main/examples/${activeTab.toLowerCase().replace(' ', '-')}-example`}
             target="_blank" 
