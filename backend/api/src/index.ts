@@ -8,6 +8,7 @@ import { globalLimiter, authLimiter } from './middleware/rateLimiter';
 import { authenticateToken } from './middleware/auth';
 import { login, verifyOTP } from './controllers/auth';
 import { getDashboardStats } from './controllers/dashboard';
+import { initSDK, verifySDK } from './controllers/sdk';
 import './cron/cleanup';
 
 dotenv.config();
@@ -75,6 +76,10 @@ app.get('/health', async (req, res) => {
 // Auth Routes (with stricter rate limit)
 app.post('/api/auth/login', authLimiter, login);
 app.post('/api/auth/verify', authLimiter, verifyOTP);
+
+// SDK Integration Routes
+app.post('/api/sdk/init', initSDK);
+app.post('/api/sdk/verify', verifySDK);
 
 // Protected Dashboard Routes
 app.get('/api/dashboard/stats', authenticateToken, getDashboardStats);
