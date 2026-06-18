@@ -1,0 +1,93 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.verifyOTP = exports.login = void 0;
+const client_1 = require("@prisma/client");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const prisma = new client_1.PrismaClient();
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_for_demo';
+const login = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await prisma.user.findFirst({
+            where: { email },
+            include: { workspace: true }
+        });
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+        // Verify password
+        const isValid = await bcryptjs_1.default.compare(password, user.password);
+        if (!isValid) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+        // Generate OTP
+        const isDemoMode = process.env.DEMO_MODE === 'true';
+        const otpCode = isDemoMode ? '123456' : Math.floor(100000 + Math.random() * 900000).toString();
+        const expiresAt = new Date();
+        expiresAt.setMinutes(expiresAt.getMinutes() + 5);
+        await prisma.oTP.create({
+            data: {
+                workspaceId: user.workspaceId,
+                userId: user.id,
+                code: otpCode,
+                expiresAt,
+            }
+        });
+        return res.json({ message: 'OTP sent successfully', isDemoMode });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+exports.login = login;
+const verifyOTP = async (req, res) => {
+    const { email, code } = req.body;
+    try {
+        const user = await prisma.user.findFirst({
+            where: { email }
+        });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const otp = await prisma.oTP.findFirst({
+            where: {
+                userId: user.id,
+                code,
+                expiresAt: {
+                    gt: new Date()
+                }
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+        if (!otp) {
+            return res.status(401).json({ error: 'Invalid or expired OTP' });
+        }
+        // Generate JWT
+        const token = jsonwebtoken_1.default.sign({ id: user.id, workspaceId: user.workspaceId, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
+        // Create session
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 1);
+        const session = await prisma.session.create({
+            data: {
+                workspaceId: user.workspaceId,
+                userId: user.id,
+                ipAddress: req.ip || '0.0.0.0',
+                userAgent: req.headers['user-agent'] || 'Unknown',
+                expiresAt
+            }
+        });
+        // Delete used OTP
+        await prisma.oTP.delete({ where: { id: otp.id } });
+        res.json({ token, session: session.id });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+exports.verifyOTP = verifyOTP;
