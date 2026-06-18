@@ -6,8 +6,8 @@ import { getDeviceFingerprint } from '@/lib/kavach';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@demo.com');
+  const [password, setPassword] = useState('Demo@123');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');

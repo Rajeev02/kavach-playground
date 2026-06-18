@@ -9,6 +9,7 @@ async function main() {
   // 1. Create a Global Demo Workspace
   const workspace = await prisma.workspace.create({
     data: {
+      id: 'bf0dee3f-adcc-4e36-a306-ec3e5932b11e',
       name: 'Global Demo Environment',
       isSandbox: false,
     },
