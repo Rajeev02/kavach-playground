@@ -47,29 +47,29 @@ export default function ProfilePage() {
         {/* Profile Card */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-none">
           <div className="h-32 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
-          <div className="px-8 pb-8 relative">
-            <div className="w-24 h-24 bg-white dark:bg-slate-800 rounded-2xl border-4 border-white dark:border-slate-900 shadow-lg flex items-center justify-center text-3xl font-bold text-slate-900 dark:text-white absolute -top-12">
-              {profile.email.substring(0, 2).toUpperCase()}
-            </div>
-            
-            <div className="mt-16 flex justify-between items-start">
-              <div>
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{profile.email}</h2>
-                <div className="flex items-center space-x-2 mt-2">
-                  <span className="px-2.5 py-1 bg-blue-100 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider rounded-lg border border-blue-200 dark:border-blue-500/20">
-                    {profile.role.toUpperCase()}
-                  </span>
-                  <span className="text-sm text-slate-500 dark:text-slate-400">
-                    Member since {new Date(profile.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
+          <div className="px-8 pb-8">
+            <div className="flex justify-between items-end -mt-12 mb-4 relative z-10">
+              <div className="w-24 h-24 bg-white dark:bg-slate-800 rounded-2xl border-4 border-white dark:border-slate-900 shadow-lg flex items-center justify-center text-3xl font-bold text-slate-900 dark:text-white">
+                {profile.email.substring(0, 2).toUpperCase()}
               </div>
               <button 
                 onClick={() => showToast('Profile update functionality coming soon.')}
-                className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-lg font-medium transition-colors border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none"
+                className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-lg font-medium transition-colors border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none mb-1"
               >
                 Edit Profile
               </button>
+            </div>
+            
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{profile.email}</h2>
+              <div className="flex items-center space-x-3 mt-2">
+                <span className="px-2.5 py-1 bg-blue-100 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider rounded-lg border border-blue-200 dark:border-blue-500/20">
+                  {profile.role.toUpperCase()}
+                </span>
+                <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+                  Member since {new Date(profile.createdAt).toLocaleDateString()}
+                </span>
+              </div>
             </div>
           </div>
         </div>
