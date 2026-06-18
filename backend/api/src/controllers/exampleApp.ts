@@ -53,7 +53,7 @@ export const revokeSession = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     await prisma.session.delete({
-      where: { id }
+      where: { id: String(id) }
     });
     return res.status(200).json({ success: true });
   } catch (error: any) {
