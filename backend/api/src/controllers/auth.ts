@@ -23,7 +23,7 @@ export const login = async (req: Request, res: Response) => {
     // The user will be authenticated when they verify the OTP code.
 
     // Generate OTP
-    const isDemoMode = process.env.DEMO_MODE === 'true';
+    const isDemoMode = process.env.DEMO_MODE !== 'false'; // Default to true in playground
     const otpCode = isDemoMode ? '123456' : Math.floor(100000 + Math.random() * 900000).toString();
 
     const expiresAt = new Date();
