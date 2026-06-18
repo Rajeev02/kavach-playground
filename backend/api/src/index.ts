@@ -56,9 +56,20 @@ app.get('/', (req, res) => {
   res.json(swaggerDocument);
 });
 
-// Healthcheck
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date() });
+// Healthcheck with Database Connection Test
+app.get('/health', async (req, res) => {
+  try {
+    // Attempt a simple database query to verify connectivity
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ status: 'ok', database: 'connected', timestamp: new Date() });
+  } catch (error: any) {
+    res.status(500).json({ 
+      status: 'error', 
+      database: 'disconnected', 
+      errorMessage: error.message,
+      env: process.env.DATABASE_URL ? 'set' : 'missing'
+    });
+  }
 });
 
 // Auth Routes (with stricter rate limit)
