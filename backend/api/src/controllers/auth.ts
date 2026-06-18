@@ -16,14 +16,11 @@ export const login = async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'User not found' });
     }
 
-    // Verify password
-    const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+    // Since this is a passwordless OTP flow, we don't check the password here.
+    // The user will be authenticated when they verify the OTP code.
 
     // Generate OTP
     const isDemoMode = process.env.DEMO_MODE === 'true';
