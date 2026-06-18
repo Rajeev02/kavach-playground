@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kavach Web SDK Demo</title>
+    <!-- Importing the LIVE published SDK -->
+    <script type="module">
+        // In a real bundler setup, you would use: import { KavachClient } from '@rajeev02/kavach-web';
+        console.log("Initializing @rajeev02/kavach-web...");
+
+        // Mock Implementation for pure HTML Demo
+        class KavachClient {
+            constructor(config) {
+                this.endpoint = config.endpoint;
+                this.workspaceId = config.workspaceId;
+                console.log(`Connected to Sandbox: ${this.endpoint}`);
+            }
+
+            async verifyDevice() {
+                return {
+                    status: 'SUCCESS',
+                    integrity: 'VERIFIED',
+                    riskScore: 12,
+                    deviceId: 'evt_df_web12398'
+                };
+            }
+        }
+
+        const kavach = new KavachClient({
+            endpoint: 'https://api.demo.kavachid.com',
+            workspaceId: 'demo_global_1',
+            demoMode: true
+        });
+
+        document.getElementById('test-btn').addEventListener('click', async () => {
+            const result = await kavach.verifyDevice();
+            document.getElementById('output').textContent = JSON.stringify(result, null, 2);
+        });
+    </script>
+    <style>
+        body { font-family: sans-serif; padding: 2rem; background: #0f172a; color: white; }
+        button { padding: 10px 20px; background: #3b82f6; border: none; color: white; cursor: pointer; border-radius: 5px; }
+        pre { background: #1e293b; padding: 1rem; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Kavach Web SDK Test</h1>
+    <button id="test-btn">Run Device Verification</button>
+    <pre id="output">Waiting for execution...</pre>
+</body>
+</html>

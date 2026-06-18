@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Workspace {
+  id        String   @id @default(uuid())
+  name      String   @default("Demo Workspace")
+  isSandbox Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  users          User[]
+  devices        Device[]
+  sessions       Session[]
+  securityEvents SecurityEvent[]
+  auditEvents    AuditEvent[]
+  riskEvents     RiskEvent[]
+  otps           OTP[]
+  files          File[]
+}
+
+model User {
+  id          String   @id @default(uuid())
+  workspaceId String
+  email       String
+  password    String   // Hashed
+  role        String   @default("user") // admin, developer, user
+  createdAt   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  devices   Device[]
+  sessions  Session[]
+  otps      OTP[]
+  files     File[]
+
+  @@unique([workspaceId, email])
+}
+
+model Device {
+  id               String   @id @default(uuid())
+  workspaceId      String
+  userId           String
+  fingerprint      String
+  platform         String
+  isTrusted        Boolean  @default(false)
+  trustScore       Int      @default(0)
+  createdAt        DateTime @default(now())
+  lastSeenAt       DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions  Session[]
+}
+
+model Session {
+  id             String   @id @default(uuid())
+  workspaceId    String
+  userId         String
+  deviceId       String?
+  ipAddress      String
+  userAgent      String
+  riskScore      Int      @default(0)
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device    Device?   @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+}
+
+model OTP {
+  id          String   @id @default(uuid())
+  workspaceId String
+  userId      String
+  code        String   // Usually 123456 in DEMO_MODE
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model File {
+  id          String   @id @default(uuid())
+  workspaceId String
+  userId      String
+  filename    String
+  url         String
+  createdAt   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SecurityEvent {
+  id          String   @id @default(uuid())
+  workspaceId String
+  type        String   // ROOT_DETECTED, JAILBREAK_DETECTED, ANOMALOUS_IP
+  description String
+  createdAt   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model AuditEvent {
+  id          String   @id @default(uuid())
+  workspaceId String
+  action      String
+  actor       String
+  target      String
+  createdAt   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model RiskEvent {
+  id          String   @id @default(uuid())
+  workspaceId String
+  scoreDelta  Int
+  reason      String
+  createdAt   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}

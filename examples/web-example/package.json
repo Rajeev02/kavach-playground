@@ -1,0 +1,15 @@
+{
+  "name": "web-example",
+  "version": "1.0.0",
+  "description": "Kavach SDK Web Example",
+  "main": "index.js",
+  "scripts": {
+    "start": "vite"
+  },
+  "dependencies": {
+    "@rajeev02/kavach-web": "latest"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

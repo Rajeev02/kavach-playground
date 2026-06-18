@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [],
+  "references": [
+    { "path": "./apps/playground" },
+    { "path": "./backend/api" }
+  ]
+}
