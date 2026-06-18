@@ -53,12 +53,11 @@ export const SDKTabs = () => {
 {`import { KavachClient } from '@rajeev02/kavach-web';
 
 const kavach = new KavachClient({
-  endpoint: 'https://api.demo.kavachid.com',
-  workspaceId: '${workspaceId}',
-  apiKey: '${apiKey}'
+  serverUrl: 'https://api.demo.kavachid.com',
+  tenantId: '${workspaceId}'
 });
 
-await kavach.init();`}
+// Use kavach to authenticate or fetch data`}
                     </code>
                   </pre>
                 </div>
