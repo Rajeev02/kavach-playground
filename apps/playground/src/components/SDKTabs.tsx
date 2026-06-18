@@ -122,6 +122,16 @@ err := client.Initialize()`}
             </pre>
           )}
         </div>
+        <div className="mt-4 pt-4 border-t border-slate-800 flex justify-end">
+          <a 
+            href={`https://github.com/Rajeev02/kavach-playground/tree/main/examples/${activeTab.toLowerCase().replace(' ', '-')}-example`}
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-blue-400 hover:text-blue-300 flex items-center transition-colors"
+          >
+            View Full {activeTab} Example App &rarr;
+          </a>
+        </div>
       </div>
     </div>
   );
