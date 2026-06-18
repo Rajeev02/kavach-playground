@@ -9,7 +9,11 @@ export default function DashboardOverview() {
 
   useEffect(() => {
     const score = localStorage.getItem('kavach_trust_score');
-    if (score) setTrustScore(parseInt(score, 10));
+    if (score) {
+      setTimeout(() => {
+        setTrustScore(parseInt(score, 10));
+      }, 100);
+    }
   }, []);
 
   const handleStepUp = () => {
@@ -45,26 +49,32 @@ export default function DashboardOverview() {
               </span>
             </div>
             
-            <svg className="w-24 h-24 mb-4" viewBox="0 0 36 36">
-              <path
-                className="text-slate-800"
-                strokeWidth="3"
-                stroke="currentColor"
-                fill="none"
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-              />
-              <path
-                className="text-green-500"
-                strokeDasharray={`${trustScore}, 100`}
-                strokeWidth="3"
-                strokeLinecap="round"
-                stroke="currentColor"
-                fill="none"
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-              />
-              <text x="18" y="20.35" className="text-3xl font-bold fill-white" textAnchor="middle">{trustScore}</text>
-            </svg>
-            <h3 className="font-semibold">Live Trust Score</h3>
+            <div className="relative w-32 h-32 mb-4 flex items-center justify-center">
+              <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                <path
+                  className="text-slate-800"
+                  strokeWidth="3"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path
+                  className="text-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.5)] transition-all duration-1000 ease-out"
+                  strokeDasharray={`${trustScore}, 100`}
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+              </svg>
+              <div className="relative flex flex-col items-center justify-center">
+                <span className="text-4xl font-bold text-white tracking-tight">{trustScore}</span>
+                <span className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mt-1">Score</span>
+              </div>
+            </div>
+            
+            <h3 className="font-semibold text-lg">Live Trust Score</h3>
             <p className="text-xs text-slate-400 mt-1">Based on hardware fingerprint and network heuristics.</p>
           </div>
 
