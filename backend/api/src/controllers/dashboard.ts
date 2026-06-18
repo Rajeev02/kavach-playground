@@ -5,7 +5,8 @@ const prisma = new PrismaClient();
 
 export const getDashboardStats = async (req: Request, res: Response) => {
   try {
-    const workspaceId = (req as any).workspaceId;
+    const user = (req as any).user;
+    const workspaceId = user?.workspaceId;
 
     if (!workspaceId) {
       return res.status(401).json({ error: 'Unauthorized workspace' });
@@ -14,7 +15,7 @@ export const getDashboardStats = async (req: Request, res: Response) => {
     // 1. Fetch Active Devices
     const devices = await prisma.device.findMany({
       where: { workspaceId },
-      orderBy: { lastActive: 'desc' },
+      orderBy: { lastSeenAt: 'desc' },
       take: 5
     });
 
