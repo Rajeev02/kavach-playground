@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function DashboardScreen({ navigation }: any) {
   const [trustScore, setTrustScore] = useState<number>(0);
+  const [deviceFingerprint, setDeviceFingerprint] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [transferring, setTransferring] = useState(false);
   const [email, setEmail] = useState('');
@@ -22,17 +23,20 @@ export default function DashboardScreen({ navigation }: any) {
 
       try {
         const fp = await getDeviceFingerprint();
-        const result = await fetchAPI('/example-app/verify', {
+        const result = await fetchAPI('/sdk/init', {
           method: 'POST',
           body: JSON.stringify({
-            email: storedEmail,
-            device: 'iPhone 15 Pro',
-            userAgent: 'Kavach ReactNative/1.0',
-            ipAddress: '192.168.1.100', // Mock IP
-            fingerprint: fp.fingerprint,
+            workspaceId: 'bf0dee3f-adcc-4e36-a306-ec3e5932b11e',
+            apiKey: 'bf0dee3f-adcc-4e36-a306-ec3e5932b11e',
+            platform: 'React Native iOS App',
+            metadata: {
+              userAgent: 'Kavach ReactNative/1.0',
+              ipAddress: '192.168.1.100', // Mock IP
+            }
           })
         });
         
+        setDeviceFingerprint(result.fingerprint);
         setTrustScore(result.trustScore || 85);
       } catch (err: any) {
         Alert.alert('Verification Failed', err.message);
@@ -52,7 +56,7 @@ export default function DashboardScreen({ navigation }: any) {
       
       await fetchAPI('/example-app/transfer', {
         method: 'POST',
-        body: JSON.stringify({ fingerprint: fp.fingerprint })
+        body: JSON.stringify({ fingerprint: deviceFingerprint || fp.fingerprint })
       });
 
       Alert.alert('Success', 'Identity Verified via Biometrics. Transfer Complete!');
