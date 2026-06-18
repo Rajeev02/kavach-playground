@@ -55,7 +55,7 @@ export default function DashboardOverview() {
               />
               <path
                 className="text-green-500"
-                strokeDasharray={\`\${trustScore}, 100\`}
+                strokeDasharray={`${trustScore}, 100`}
                 strokeWidth="3"
                 strokeLinecap="round"
                 stroke="currentColor"
