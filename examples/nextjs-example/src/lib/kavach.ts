@@ -29,7 +29,7 @@ export async function getDeviceFingerprint() {
 
     if (!response.ok) {
       console.warn("Backend /api/sdk/init failed. Ensure backend is running on port 4000.");
-      return "fp_demo_secured_device";
+      return { fingerprint: "fp_demo_secured_device", trustScore: 99 };
     }
 
     const data = await response.json();
