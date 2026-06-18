@@ -50,9 +50,9 @@ export const SDKTabs = () => {
                 <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
                   <pre>
                     <code>
-{`import { Kavach } from '@rajeev02/kavach-web';
+{`import { KavachClient } from '@rajeev02/kavach-web';
 
-const kavach = new Kavach({
+const kavach = new KavachClient({
   workspaceId: '${workspaceId}',
   apiKey: '${apiKey}'
 });
