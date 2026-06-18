@@ -36,10 +36,20 @@ export const SDKTabs = () => {
       <div className="mt-4 p-6 bg-slate-900 border border-slate-800 rounded-xl shadow-sm">
         <h3 className="text-lg font-semibold mb-2 text-white">{activeTab} SDK Integration</h3>
         <p className="text-slate-400 mb-4">Select an environment to view the code snippet.</p>
-        <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+        <div className="space-y-6">
           {activeTab === 'Web' && (
-            <pre>
-              <code>
+            <>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">1. Install the SDK</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre><code>npm install @kavach/web</code></pre>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">2. Initialize on your Client</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre>
+                    <code>
 {`import { Kavach } from '@kavach/web';
 
 const kavach = new Kavach({
@@ -48,12 +58,26 @@ const kavach = new Kavach({
 });
 
 await kavach.init();`}
-              </code>
-            </pre>
+                    </code>
+                  </pre>
+                </div>
+              </div>
+            </>
           )}
+
           {activeTab === 'Python' && (
-            <pre>
-              <code>
+            <>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">1. Install the SDK</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre><code>pip install kavach-python-sdk</code></pre>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">2. Initialize on your Backend</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre>
+                    <code>
 {`from kavach import KavachClient
 
 client = KavachClient(
@@ -62,12 +86,26 @@ client = KavachClient(
 )
 
 client.init()`}
-              </code>
-            </pre>
+                    </code>
+                  </pre>
+                </div>
+              </div>
+            </>
           )}
+
           {activeTab === 'React Native' && (
-            <pre>
-              <code>
+            <>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">1. Install the SDK</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre><code>npm install @kavach/react-native</code></pre>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">2. Initialize in your App</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre>
+                    <code>
 {`import Kavach from '@kavach/react-native';
 
 const kavach = new Kavach({
@@ -76,12 +114,26 @@ const kavach = new Kavach({
 });
 
 await kavach.init();`}
-              </code>
-            </pre>
+                    </code>
+                  </pre>
+                </div>
+              </div>
+            </>
           )}
+
           {activeTab === 'iOS' && (
-            <pre>
-              <code>
+            <>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">1. Install via CocoaPods</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre><code>pod 'KavachSDK'</code></pre>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">2. Initialize in AppDelegate</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre>
+                    <code>
 {`import KavachSDK
 
 let kavach = KavachClient(
@@ -90,12 +142,26 @@ let kavach = KavachClient(
 )
 
 kavach.initialize()`}
-              </code>
-            </pre>
+                    </code>
+                  </pre>
+                </div>
+              </div>
+            </>
           )}
+
           {activeTab === 'Android' && (
-            <pre>
-              <code>
+            <>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">1. Add Gradle Dependency</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre><code>implementation 'com.kavach.sdk:kavach-android:1.0.0'</code></pre>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">2. Initialize in MainActivity</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre>
+                    <code>
 {`import com.kavach.sdk.KavachClient
 
 val kavach = KavachClient.Builder(context)
@@ -104,12 +170,26 @@ val kavach = KavachClient.Builder(context)
     .build()
 
 kavach.initialize()`}
-              </code>
-            </pre>
+                    </code>
+                  </pre>
+                </div>
+              </div>
+            </>
           )}
+
           {activeTab === 'Go' && (
-            <pre>
-              <code>
+            <>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">1. Get the Go Module</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre><code>go get github.com/rajeev02/kavach-go</code></pre>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">2. Initialize Client Middleware</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre>
+                    <code>
 {`import "github.com/rajeev02/kavach-go"
 
 client := kavach.NewClient(kavach.Config{
@@ -118,8 +198,11 @@ client := kavach.NewClient(kavach.Config{
 })
 
 err := client.Initialize()`}
-              </code>
-            </pre>
+                    </code>
+                  </pre>
+                </div>
+              </div>
+            </>
           )}
         </div>
         <div className="mt-4 pt-4 border-t border-slate-800 flex justify-end">
