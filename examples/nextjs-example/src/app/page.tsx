@@ -51,8 +51,6 @@ export default function LoginPage() {
         return;
       }
 
-      const data = await response.json();
-
       localStorage.setItem('kavach_auth', 'true');
       localStorage.setItem('kavach_email', email);
       localStorage.setItem('kavach_trust_score', result.trustScore.toString());
@@ -60,7 +58,7 @@ export default function LoginPage() {
         router.push('/dashboard');
       }, 1000);
 
-    } catch (err) {
+    } catch {
       setError('Network error connecting to backend.');
       setLoading(false);
     }

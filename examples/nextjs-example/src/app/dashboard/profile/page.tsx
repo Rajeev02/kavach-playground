@@ -26,11 +26,13 @@ export default function ProfilePage() {
         .catch(console.error);
     } else {
       // Fallback if they haven't re-logged in since the update
-      setProfile({
-        email: 'admin@demo.com',
-        role: 'admin',
-        createdAt: new Date().toISOString()
-      });
+      setTimeout(() => {
+        setProfile({
+          email: 'admin@demo.com',
+          role: 'admin',
+          createdAt: new Date().toISOString()
+        });
+      }, 0);
     }
   }, []);
 

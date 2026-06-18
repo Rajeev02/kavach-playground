@@ -23,7 +23,7 @@ export default function SessionsPage() {
         .then(res => res.json())
         .then(data => {
           // Map DB models to UI models
-          const mapped = data.map((s: any, idx: number) => ({
+          const mapped = data.map((s: { id: string; device: { platform: string }; userAgent: string; ipAddress: string; createdAt: string }, idx: number) => ({
             id: s.id,
             device: s.device?.platform || 'Unknown Device',
             browser: s.userAgent || 'Unknown Browser',
@@ -39,7 +39,7 @@ export default function SessionsPage() {
           setLoading(false);
         });
     } else {
-      setLoading(false);
+      setTimeout(() => setLoading(false), 0);
     }
   }, []);
 

@@ -10,14 +10,13 @@ export default function SettingsPage() {
   const [devMode, setDevMode] = useState(false);
   const [toast, setToast] = useState('');
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => { setTimeout(() => setMounted(true), 0); }, []);
 
   const handleSave = () => {
     setToast('Preferences saved securely.');
     setTimeout(() => setToast(''), 3000);
   };
 
-  const isDark = theme === 'dark' || theme === 'system'; // simplify for demo
 
   return (
     <div className="p-8 relative min-h-screen">

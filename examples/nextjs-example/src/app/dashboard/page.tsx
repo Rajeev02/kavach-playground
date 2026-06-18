@@ -39,7 +39,7 @@ export default function DashboardOverview() {
           setShowStepUp(false);
           setStepUpStatus('idle');
         }, 2000);
-      } catch (err) {
+      } catch {
         setStepUpStatus('idle');
         alert("Step-Up Authentication Failed. Transfer denied.");
       }
@@ -164,7 +164,7 @@ export default function DashboardOverview() {
 
           <h2 className="text-lg font-bold mb-4 text-slate-900 dark:text-white">Secure Financial Data</h2>
           <div className="bg-slate-50 dark:bg-slate-950 rounded-lg p-4 font-mono text-sm border border-slate-200 dark:border-slate-800 mb-6 text-slate-800 dark:text-slate-300">
-            <div className="text-green-600 dark:text-green-400 mb-2">// Restricted Access Area</div>
+            <div className="text-green-600 dark:text-green-400 mb-2">{/* Restricted Access Area */}</div>
             <div>Account Balance: <span className="text-slate-900 dark:text-white font-bold">$1,450,299.00</span></div>
             <div>Pending Transfers: <span className="text-slate-900 dark:text-white font-bold">0</span></div>
           </div>

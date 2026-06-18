@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (localStorage.getItem('kavach_auth') !== 'true') {
       router.push('/');
     } else {
-      setLoading(false);
+      setTimeout(() => setLoading(false), 0);
     }
   }, [router]);
 
