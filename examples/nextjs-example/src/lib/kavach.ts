@@ -4,6 +4,7 @@ import { KavachClient } from '@rajeev02/kavach-web';
 // In a real application, you would pass your actual Workspace ID and API Key from env vars.
 // For this demo, we use a placeholder that matches the Playground seed script.
 export const kavachClient = new KavachClient({
+  endpoint: 'http://localhost:4000',
   workspaceId: 'bf0dee3f-adcc-4e36-a306-ec3e5932b11e', // This is the seed workspace ID from the local database
   apiKey: 'bf0dee3f-adcc-4e36-a306-ec3e5932b11e'
 });
