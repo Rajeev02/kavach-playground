@@ -1,46 +1,30 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"time"
+	"log"
+	"net/http"
+
+	"github.com/rajeev02/kavach-go"
 )
 
-// KavachClient represents the published Go SDK: pkg.go.dev/github.com/Rajeev02/kavachid/sdks/kavach-go
-type KavachClient struct {
-	Endpoint    string
-	WorkspaceID string
-	DemoMode    bool
-}
-
-func NewKavachClient(endpoint, workspaceId string, demoMode bool) *KavachClient {
-	fmt.Printf("✅ Kavach Go SDK initialized! Connected to %s\n", endpoint)
-	return &KavachClient{Endpoint: endpoint, WorkspaceID: workspaceId, DemoMode: demoMode}
-}
-
-func (c *KavachClient) VerifyIntegrity() map[string]interface{} {
-	return map[string]interface{}{
-		"status":         "VERIFIED",
-		"risk_score":     8,
-		"sandbox_active": true,
-		"device_id":      "go_sandbox_8820",
-	}
-}
-
 func main() {
-	fmt.Println("🚀 Starting Go SDK Demo")
+	// Initialize the Kavach SDK Client
+	client, err := kavach.NewClient(kavach.Config{
+		WorkspaceID: "YOUR_WORKSPACE_ID",
+		APIKey:      "YOUR_API_KEY",
+	})
+	if err != nil {
+		log.Fatalf("Failed to initialize Kavach SDK: %v", err)
+	}
 
-	// 1. Initialize Kavach Client pointing to the Sandbox Backend
-	client := NewKavachClient("https://api.demo.kavachid.com", "demo_global_1", true)
+	// Example handler protected by Kavach
+	http.HandleFunc("/api/secure-data", client.Middleware(func(w http.ResponseWriter, r *http.Request) {
+		// If the middleware passes, the user's device/session is trusted
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, `{"status": "success", "message": "You accessed secure data!"}`)
+	}))
 
-	// 2. Run Security Check
-	fmt.Println("Executing Integrity Verification...")
-	time.Sleep(1 * time.Second)
-
-	result := client.VerifyIntegrity()
-
-	bytes, _ := json.MarshalIndent(result, "", "  ")
-	fmt.Println("\n--- Sandbox Backend Response ---")
-	fmt.Println(string(bytes))
-	fmt.Println("--------------------------------")
+	fmt.Println("Server running on :8080. Access /api/secure-data with a valid Kavach token.")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
