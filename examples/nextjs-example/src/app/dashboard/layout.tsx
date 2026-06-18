@@ -33,15 +33,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ];
 
   return (
-    <div className="flex h-screen bg-slate-950 text-white overflow-hidden">
+    <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
-      <div className="w-64 border-r border-slate-800 bg-slate-900 flex flex-col">
-        <div className="h-16 flex items-center px-6 border-b border-slate-800">
-          <div className="flex items-center space-x-2 text-blue-400">
+      <div className="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col transition-colors">
+        <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-800 transition-colors">
+          <div className="flex items-center space-x-2 text-blue-600 dark:text-blue-400">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
-            <span className="font-bold text-lg text-white">Acme Inc.</span>
+            <span className="font-bold text-lg text-slate-900 dark:text-white">Acme Inc.</span>
           </div>
         </div>
         
@@ -52,21 +52,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Link 
                 key={item.name} 
                 href={item.href}
-                className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${active ? 'bg-blue-600/10 text-blue-400' : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'}`}
+                className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${active ? 'bg-blue-50 dark:bg-blue-600/10 text-blue-600 dark:text-blue-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white'}`}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
                 </svg>
-                <span className="font-medium text-sm">{item.name}</span>
+                <span className="text-sm">{item.name}</span>
               </Link>
             )
           })}
         </nav>
         
-        <div className="p-4 border-t border-slate-800">
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800 transition-colors">
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors text-sm font-medium"
+            className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg transition-colors text-sm font-medium"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -77,7 +77,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 transition-colors">
         {children}
       </div>
     </div>
