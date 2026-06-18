@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { Header } from '../components/Header';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,20 +23,7 @@ export default function RootLayout({
           ⚠️ <span className="font-bold">Demo Environment:</span> All data is temporary and automatically deleted after 7 days. This environment is intended for testing and evaluation purposes only.
         </div>
         
-        {/* HEADER */}
-        <header className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold">K</div>
-            <span className="font-bold text-xl tracking-tight">Kavach<span className="text-blue-400">Playground</span></span>
-          </div>
-          <nav className="flex items-center space-x-6 text-sm text-slate-300">
-            <a href="https://docs.kavachid.com" className="hover:text-white transition-colors">Documentation</a>
-            <a href="https://kavachid.com" className="hover:text-white transition-colors">Main Website</a>
-            <button className="bg-white text-black px-4 py-1.5 rounded-full font-medium hover:bg-slate-200 transition-colors">
-              Get API Key
-            </button>
-          </nav>
-        </header>
+        <Header />
 
         {/* MAIN CONTENT */}
         <main className="flex-1 flex flex-col">
