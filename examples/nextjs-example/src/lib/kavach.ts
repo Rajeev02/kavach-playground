@@ -10,11 +10,32 @@ export const kavachClient = new KavachClient({
 
 export async function getDeviceFingerprint() {
   try {
-    // Some SDKs return the fingerprint from an init() call, others have a getter or do it silently.
-    // For safety, we can mock a fallback if the live SDK requires a remote server we can't reach.
-    return "fp_demo_secured_device";
+    // In a real production app, the live @rajeev02/kavach-web SDK would automatically 
+    // construct the fingerprint and push it to your serverUrl.
+    // For this local demo to visually show up on your Dashboard, we will explicitly hit the backend init route.
+    
+    const response = await fetch('http://localhost:4000/api/sdk/init', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        workspaceId: 'bf0dee3f-adcc-4e36-a306-ec3e5932b11e',
+        apiKey: 'bf0dee3f-adcc-4e36-a306-ec3e5932b11e',
+        platform: 'Next.js Example App',
+        metadata: {
+          userAgent: navigator.userAgent
+        }
+      })
+    });
+
+    if (!response.ok) {
+      console.warn("Backend /api/sdk/init failed. Ensure backend is running on port 4000.");
+      return "fp_demo_secured_device";
+    }
+
+    const data = await response.json();
+    return data.fingerprint;
   } catch (error) {
     console.error("Kavach Initialization Error:", error);
-    return null;
+    return "fp_demo_secured_device";
   }
 }
