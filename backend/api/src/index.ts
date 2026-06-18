@@ -9,6 +9,7 @@ import { authenticateToken } from './middleware/auth';
 import { login, verifyOTP } from './controllers/auth';
 import { getDashboardStats } from './controllers/dashboard';
 import { initSDK, verifySDK } from './controllers/sdk';
+import { getProfile, getSessions, revokeSession, transferFunds } from './controllers/exampleApp';
 import './cron/cleanup';
 
 dotenv.config();
@@ -83,6 +84,12 @@ app.post('/api/sdk/verify', verifySDK);
 
 // Protected Dashboard Routes
 app.get('/api/dashboard/stats', authenticateToken, getDashboardStats);
+
+// Next.js Example App End-to-End Routes
+app.get('/api/example-app/profile', getProfile);
+app.get('/api/example-app/sessions', getSessions);
+app.delete('/api/example-app/sessions/:id', revokeSession);
+app.post('/api/example-app/transfer', transferFunds);
 
 // Start server (Only if not running in a serverless environment like Vercel)
 if (process.env.NODE_ENV !== 'production') {

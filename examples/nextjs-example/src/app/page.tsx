@@ -45,9 +45,16 @@ export default function LoginPage() {
         body: JSON.stringify({ fingerprint: result.fingerprint, email, password })
       });
 
-      // Even if our local backend verification fails (because the live SDK might generate a real payload we didn't mock),
-      // we will let the user pass to the dashboard for the sake of the visual demo.
+      if (!response.ok) {
+        setError('Invalid credentials.');
+        setLoading(false);
+        return;
+      }
+
+      const data = await response.json();
+
       localStorage.setItem('kavach_auth', 'true');
+      localStorage.setItem('kavach_email', email);
       localStorage.setItem('kavach_trust_score', result.trustScore.toString());
       setTimeout(() => {
         router.push('/dashboard');

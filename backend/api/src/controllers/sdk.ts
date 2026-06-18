@@ -75,10 +75,21 @@ export const initSDK = async (req: Request, res: Response) => {
 
 export const verifySDK = async (req: Request, res: Response) => {
   try {
-    const { fingerprint } = req.body;
+    const { fingerprint, email, password } = req.body;
     
-    if (!fingerprint) {
-      return res.status(400).json({ error: 'Fingerprint is required' });
+    if (!fingerprint) return res.status(400).json({ error: 'Fingerprint is required' });
+
+    // Find user by email
+    let user;
+    if (email && password) {
+      user = await prisma.user.findFirst({ where: { email } });
+      if (!user) return res.status(401).json({ error: 'Invalid credentials' });
+      
+      // In a real app we would use bcrypt.compare(password, user.password)
+      // Since it's a demo and seed uses 'Demo@123', we'll do a simple check or bcrypt.
+      const bcrypt = require('bcryptjs');
+      const valid = await bcrypt.compare(password, user.password);
+      if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     const device = await prisma.device.findFirst({
@@ -89,9 +100,24 @@ export const verifySDK = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Device not found or not trusted' });
     }
 
+    // Create a new session since they just logged in
+    if (user) {
+      await prisma.session.create({
+        data: {
+          workspaceId: user.workspaceId,
+          userId: user.id,
+          deviceId: device.id,
+          ipAddress: req.ip || '127.0.0.1',
+          userAgent: req.headers['user-agent'] || 'Unknown',
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        }
+      });
+    }
+
     return res.status(200).json({
       success: true,
       verified: true,
+      email: user?.email,
       device: {
         id: device.id,
         isTrusted: device.isTrusted,

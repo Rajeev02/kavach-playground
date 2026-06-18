@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { getDeviceFingerprint } from '@/lib/kavach';
 
 export default function DashboardOverview() {
   const [trustScore, setTrustScore] = useState<number>(0);
@@ -16,12 +17,32 @@ export default function DashboardOverview() {
     }
   }, []);
 
-  const handleStepUp = () => {
+  const handleStepUp = async () => {
     setStepUpStatus('loading');
-    setTimeout(() => {
-      // Simulate successful step-up via Kavach passkey/biometric
-      setStepUpStatus('success');
-      setTimeout(() => setShowStepUp(false), 2000);
+    
+    // In a real app, this would trigger the native WebAuthn prompt again.
+    // We simulate the prompt delay, then call the backend API
+    setTimeout(async () => {
+      try {
+        const fp = await getDeviceFingerprint();
+        
+        const response = await fetch('http://localhost:4000/api/example-app/transfer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fingerprint: fp.fingerprint })
+        });
+
+        if (!response.ok) throw new Error('Transfer denied');
+
+        setStepUpStatus('success');
+        setTimeout(() => {
+          setShowStepUp(false);
+          setStepUpStatus('idle');
+        }, 2000);
+      } catch (err) {
+        setStepUpStatus('idle');
+        alert("Step-Up Authentication Failed. Transfer denied.");
+      }
     }, 1500);
   };
 

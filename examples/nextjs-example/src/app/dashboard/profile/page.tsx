@@ -1,45 +1,73 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+
 export default function ProfilePage() {
+  const [toast, setToast] = useState('');
+  const [profile, setProfile] = useState<any>(null);
+
+  useEffect(() => {
+    const email = localStorage.getItem('kavach_email');
+    if (email) {
+      fetch(`http://localhost:4000/api/example-app/profile?email=${email}`)
+        .then(res => res.json())
+        .then(data => setProfile(data))
+        .catch(console.error);
+    }
+  }, []);
+
+  const handleAction = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(''), 3000);
+  };
+
+  if (!profile) return <div className="p-8 text-slate-400">Loading profile securely...</div>;
+
   return (
-    <div className="p-8">
+    <div className="p-8 relative min-h-screen">
+      {toast && (
+        <div className="absolute top-4 right-8 bg-blue-500/10 border border-blue-500/20 text-blue-400 px-4 py-2 rounded-lg text-sm font-medium animate-pulse z-50">
+          {toast}
+        </div>
+      )}
+
       <div className="max-w-4xl mx-auto space-y-8">
         <header>
           <h1 className="text-2xl font-bold">User Profile</h1>
           <p className="text-slate-400 text-sm mt-1">Manage your identity and authentication methods.</p>
         </header>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex">
-          <div className="p-8 border-r border-slate-800 flex flex-col items-center justify-center min-w-[250px] bg-slate-900/50">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col md:flex-row">
+          <div className="p-8 border-b md:border-b-0 md:border-r border-slate-800 flex flex-col items-center justify-center min-w-[250px] bg-slate-900/50">
             <div className="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center text-3xl font-bold text-white mb-4 shadow-lg shadow-blue-500/20">
-              AD
+              {profile.email.substring(0, 2).toUpperCase()}
             </div>
-            <h2 className="font-bold text-xl">Admin User</h2>
-            <p className="text-sm text-slate-400">admin@demo.com</p>
+            <h2 className="font-bold text-xl">{profile.email.split('@')[0]}</h2>
+            <p className="text-sm text-slate-400">{profile.email}</p>
             <div className="mt-4 bg-blue-500/10 text-blue-400 text-xs px-3 py-1 rounded-full border border-blue-500/20 uppercase tracking-wider font-bold">
-              Organization Admin
+              {profile.role}
             </div>
           </div>
           
           <div className="flex-1 p-8 space-y-8">
             <div>
               <h3 className="text-lg font-semibold mb-4 border-b border-slate-800 pb-2">Personal Information</h3>
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Full Name</label>
-                  <div className="text-slate-200">Admin User</div>
+                  <div className="text-slate-200 capitalize">{profile.email.split('@')[0]}</div>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Email Address</label>
-                  <div className="text-slate-200">admin@demo.com</div>
+                  <div className="text-slate-200">{profile.email}</div>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Timezone</label>
                   <div className="text-slate-200">America/Los_Angeles (PST)</div>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Language</label>
-                  <div className="text-slate-200">English (US)</div>
+                  <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Member Since</label>
+                  <div className="text-slate-200">{new Date(profile.createdAt).toLocaleDateString()}</div>
                 </div>
               </div>
             </div>
@@ -47,7 +75,12 @@ export default function ProfilePage() {
             <div>
               <h3 className="text-lg font-semibold mb-4 border-b border-slate-800 pb-2 flex justify-between items-center">
                 <span>Authentication Methods</span>
-                <button className="text-sm text-blue-400 hover:text-blue-300 font-medium">Add Method</button>
+                <button 
+                  onClick={() => handleAction('Hardware security key registration initiated...')}
+                  className="text-sm text-blue-400 hover:text-blue-300 font-medium"
+                >
+                  Add Method
+                </button>
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-slate-950 border border-slate-800 rounded-xl">
@@ -62,7 +95,12 @@ export default function ProfilePage() {
                       <div className="text-xs text-slate-500">Updated 3 months ago</div>
                     </div>
                   </div>
-                  <button className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition-colors">Change</button>
+                  <button 
+                    onClick={() => handleAction('Password reset link sent to admin@demo.com')}
+                    className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition-colors"
+                  >
+                    Change
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between p-4 bg-slate-950 border border-slate-800 rounded-xl">
@@ -80,7 +118,12 @@ export default function ProfilePage() {
                       <div className="text-xs text-slate-500">Registered today via Kavach WebAuthn</div>
                     </div>
                   </div>
-                  <button className="px-3 py-1.5 text-red-400 hover:bg-red-400/10 rounded-lg text-sm transition-colors">Remove</button>
+                  <button 
+                    onClick={() => handleAction('Cannot remove primary authentication method.')}
+                    className="px-3 py-1.5 text-red-400 hover:bg-red-400/10 rounded-lg text-sm transition-colors"
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
             </div>

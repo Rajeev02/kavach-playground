@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type Session = {
   id: string;
@@ -12,42 +12,57 @@ type Session = {
 };
 
 export default function SessionsPage() {
-  const [sessions, setSessions] = useState<Session[]>([
-    {
-      id: 'sess_1',
-      device: 'MacBook Pro 16"',
-      browser: 'Chrome 114.0',
-      location: 'San Francisco, CA',
-      lastActive: 'Active now',
-      isCurrent: true,
-    },
-    {
-      id: 'sess_2',
-      device: 'iPhone 14 Pro',
-      browser: 'Safari Mobile',
-      location: 'San Francisco, CA',
-      lastActive: '2 hours ago',
-      isCurrent: false,
-    },
-    {
-      id: 'sess_3',
-      device: 'Windows PC',
-      browser: 'Firefox 112.0',
-      location: 'New York, NY',
-      lastActive: '3 days ago',
-      isCurrent: false,
-    }
-  ]);
-
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [loading, setLoading] = useState(true);
   const [revokingId, setRevokingId] = useState<string | null>(null);
 
-  const revokeSession = (id: string) => {
+  useEffect(() => {
+    const email = localStorage.getItem('kavach_email');
+    if (email) {
+      fetch(`http://localhost:4000/api/example-app/sessions?email=${email}`)
+        .then(res => res.json())
+        .then(data => {
+          // Map DB models to UI models
+          const mapped = data.map((s: any, idx: number) => ({
+            id: s.id,
+            device: s.device?.platform || 'Unknown Device',
+            browser: s.userAgent || 'Unknown Browser',
+            location: s.ipAddress || 'Unknown IP',
+            lastActive: new Date(s.createdAt).toLocaleString(),
+            isCurrent: idx === 0 // Just map the most recent session as current for demo
+          }));
+          setSessions(mapped);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error(err);
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const revokeSession = async (id: string) => {
     setRevokingId(id);
-    setTimeout(() => {
+    try {
+      await fetch(`http://localhost:4000/api/example-app/sessions/${id}`, { method: 'DELETE' });
       setSessions(sessions.filter(s => s.id !== id));
-      setRevokingId(null);
-    }, 1000);
+    } catch (e) {
+      console.error(e);
+    }
+    setRevokingId(null);
   };
+
+  const handleRevokeAll = async () => {
+    const others = sessions.filter(s => !s.isCurrent);
+    for (const s of others) {
+      await fetch(`http://localhost:4000/api/example-app/sessions/${s.id}`, { method: 'DELETE' });
+    }
+    setSessions(sessions.filter(s => s.isCurrent));
+  };
+
+  if (loading) return <div className="p-8 text-slate-400">Loading active sessions securely...</div>;
 
   return (
     <div className="p-8">
@@ -63,7 +78,10 @@ export default function SessionsPage() {
               <h2 className="font-semibold">Active Sessions</h2>
               <p className="text-sm text-slate-400 mt-1">You are currently logged in to {sessions.length} devices.</p>
             </div>
-            <button className="px-4 py-2 text-sm font-medium text-red-400 bg-red-400/10 hover:bg-red-400/20 rounded-lg transition-colors border border-red-500/20">
+            <button 
+              onClick={handleRevokeAll}
+              className="px-4 py-2 text-sm font-medium text-red-400 bg-red-400/10 hover:bg-red-400/20 rounded-lg transition-colors border border-red-500/20"
+            >
               Revoke All Other Sessions
             </button>
           </div>
@@ -73,7 +91,7 @@ export default function SessionsPage() {
               <div key={session.id} className="p-6 flex items-center justify-between hover:bg-slate-800/30 transition-colors">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-slate-400 border border-slate-700">
-                    {session.device.includes('iPhone') ? (
+                    {session.device.includes('iPhone') || session.device.includes('iOS') ? (
                       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                       </svg>
