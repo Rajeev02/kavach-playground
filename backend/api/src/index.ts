@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client';
 
 // Import our middleware, controllers, and cron jobs
 import { globalLimiter, authLimiter } from './middleware/rateLimiter';
-import { requireAuth } from './middleware/auth';
+import { authenticateToken } from './middleware/auth';
 import { login, verifyOTP } from './controllers/auth';
 import { getDashboardStats } from './controllers/dashboard';
 import './cron/cleanup';
@@ -66,7 +66,7 @@ app.post('/api/auth/login', authLimiter, login);
 app.post('/api/auth/verify', authLimiter, verifyOTP);
 
 // Protected Dashboard Routes
-app.get('/api/dashboard/stats', requireAuth, getDashboardStats);
+app.get('/api/dashboard/stats', authenticateToken, getDashboardStats);
 
 // Start server (Only if not running in a serverless environment like Vercel)
 if (process.env.NODE_ENV !== 'production') {
