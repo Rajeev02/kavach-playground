@@ -47,7 +47,7 @@ export default function SessionsPage() {
     setRevokingId(id);
     try {
       await fetch(`http://localhost:4000/api/example-app/sessions/${id}`, { method: 'DELETE' });
-      setSessions(sessions.filter(s => s.id !== id));
+      setSessions(prev => prev.filter(s => s.id !== id));
     } catch (e) {
       console.error(e);
     }
@@ -59,7 +59,7 @@ export default function SessionsPage() {
     for (const s of others) {
       await fetch(`http://localhost:4000/api/example-app/sessions/${s.id}`, { method: 'DELETE' });
     }
-    setSessions(sessions.filter(s => s.isCurrent));
+    setSessions(prev => prev.filter(s => s.isCurrent));
   };
 
   if (loading) return <div className="p-8 text-slate-400">Loading active sessions securely...</div>;

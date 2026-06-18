@@ -13,6 +13,13 @@ export default function ProfilePage() {
         .then(res => res.json())
         .then(data => setProfile(data))
         .catch(console.error);
+    } else {
+      // Fallback if they haven't re-logged in since the update
+      setProfile({
+        email: 'admin@demo.com',
+        role: 'admin',
+        createdAt: new Date().toISOString()
+      });
     }
   }, []);
 
