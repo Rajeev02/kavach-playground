@@ -29,7 +29,11 @@ app.get('/health', (req, res) => {
 app.post('/api/auth/login', authLimiter, login);
 app.post('/api/auth/verify', authLimiter, verifyOTP);
 
-// Start server
-app.listen(port, () => {
-  console.log(`Backend API running on http://localhost:${port}`);
-});
+// Start server (Only if not running in a serverless environment like Vercel)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.log(`Backend API running on http://localhost:${port}`);
+  });
+}
+
+export default app;
