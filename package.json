@@ -18,6 +18,8 @@
   "devDependencies": {
     "typescript": "^5.0.0",
     "eslint": "^9",
-    "prettier": "^3.0.0"
+    "prettier": "^3.0.0",
+    "tailwindcss": "^4",
+    "@tailwindcss/postcss": "^4"
   }
 }
