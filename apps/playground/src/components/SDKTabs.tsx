@@ -65,10 +65,60 @@ client.init()`}
               </code>
             </pre>
           )}
-          {/* Fallback for others */}
-          {activeTab !== 'Web' && activeTab !== 'Python' && (
+          {activeTab === 'React Native' && (
             <pre>
-              <code className="text-slate-500">{`// Snippet for ${activeTab} coming soon...`}</code>
+              <code>
+{`import Kavach from '@kavach/react-native';
+
+const kavach = new Kavach({
+  workspaceId: '${workspaceId}',
+  apiKey: '${apiKey}'
+});
+
+await kavach.init();`}
+              </code>
+            </pre>
+          )}
+          {activeTab === 'iOS' && (
+            <pre>
+              <code>
+{`import KavachSDK
+
+let kavach = KavachClient(
+    workspaceId: "${workspaceId}",
+    apiKey: "${apiKey}"
+)
+
+kavach.initialize()`}
+              </code>
+            </pre>
+          )}
+          {activeTab === 'Android' && (
+            <pre>
+              <code>
+{`import com.kavach.sdk.KavachClient
+
+val kavach = KavachClient.Builder(context)
+    .setWorkspaceId("${workspaceId}")
+    .setApiKey("${apiKey}")
+    .build()
+
+kavach.initialize()`}
+              </code>
+            </pre>
+          )}
+          {activeTab === 'Go' && (
+            <pre>
+              <code>
+{`import "github.com/rajeev02/kavach-go"
+
+client := kavach.NewClient(kavach.Config{
+    WorkspaceID: "${workspaceId}",
+    APIKey:      "${apiKey}",
+})
+
+err := client.Initialize()`}
+              </code>
             </pre>
           )}
         </div>
