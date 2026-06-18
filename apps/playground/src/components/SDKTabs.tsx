@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { getUser, User } from '../lib/auth';
 
-const tabs = ['Web', 'React Native', 'iOS', 'Android', 'Python', 'Go'];
+const tabs = ['Web', 'React Native', 'iOS', 'Android', 'Python', 'Go', 'Flutter'];
 
 export const SDKTabs = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
@@ -18,12 +18,12 @@ export const SDKTabs = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-8">
-      <div className="flex space-x-1 rounded-xl bg-slate-900 p-1 border border-slate-800">
+      <div className="flex space-x-1 rounded-xl bg-slate-900 p-1 border border-slate-800 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`w-full rounded-lg py-2.5 text-sm font-medium leading-5 transition-colors
+            className={`whitespace-nowrap px-4 rounded-lg py-2.5 text-sm font-medium leading-5 transition-colors flex-1
               ${activeTab === tab
                 ? 'bg-blue-600 text-white shadow'
                 : 'text-slate-400 hover:bg-slate-800 hover:text-white'
@@ -42,7 +42,7 @@ export const SDKTabs = () => {
               <div>
                 <h4 className="text-sm font-medium text-slate-300 mb-2">1. Install the SDK</h4>
                 <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
-                  <pre><code>npm install @kavach/web</code></pre>
+                  <pre><code>npm install @rajeev02/kavach-web</code></pre>
                 </div>
               </div>
               <div>
@@ -50,7 +50,7 @@ export const SDKTabs = () => {
                 <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
                   <pre>
                     <code>
-{`import { Kavach } from '@kavach/web';
+{`import { Kavach } from '@rajeev02/kavach-web';
 
 const kavach = new Kavach({
   workspaceId: '${workspaceId}',
@@ -70,7 +70,7 @@ await kavach.init();`}
               <div>
                 <h4 className="text-sm font-medium text-slate-300 mb-2">1. Install the SDK</h4>
                 <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
-                  <pre><code>pip install kavach-python-sdk</code></pre>
+                  <pre><code>pip install rajeev02-kavach-sdk</code></pre>
                 </div>
               </div>
               <div>
@@ -98,7 +98,7 @@ client.init()`}
               <div>
                 <h4 className="text-sm font-medium text-slate-300 mb-2">1. Install the SDK</h4>
                 <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
-                  <pre><code>npm install @kavach/react-native</code></pre>
+                  <pre><code>npm install @rajeev02/kavach-react-native</code></pre>
                 </div>
               </div>
               <div>
@@ -106,7 +106,7 @@ client.init()`}
                 <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
                   <pre>
                     <code>
-{`import Kavach from '@kavach/react-native';
+{`import Kavach from '@rajeev02/kavach-react-native';
 
 const kavach = new Kavach({
   workspaceId: '${workspaceId}',
@@ -152,9 +152,9 @@ kavach.initialize()`}
           {activeTab === 'Android' && (
             <>
               <div>
-                <h4 className="text-sm font-medium text-slate-300 mb-2">1. Add Gradle Dependency</h4>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">1. Add Maven Dependency</h4>
                 <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
-                  <pre><code>implementation 'com.kavach.sdk:kavach-android:1.0.0'</code></pre>
+                  <pre><code>implementation 'io.github.rajeev02:kavach:1.0.0'</code></pre>
                 </div>
               </div>
               <div>
@@ -162,7 +162,7 @@ kavach.initialize()`}
                 <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
                   <pre>
                     <code>
-{`import com.kavach.sdk.KavachClient
+{`import io.github.rajeev02.kavach.KavachClient
 
 val kavach = KavachClient.Builder(context)
     .setWorkspaceId("${workspaceId}")
@@ -198,6 +198,34 @@ client := kavach.NewClient(kavach.Config{
 })
 
 err := client.Initialize()`}
+                    </code>
+                  </pre>
+                </div>
+              </div>
+            </>
+          )}
+
+          {activeTab === 'Flutter' && (
+            <>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">1. Add Pub Dependency</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre><code>flutter pub add kavach_flutter</code></pre>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-slate-300 mb-2">2. Initialize in main.dart</h4>
+                <div className="bg-slate-950 text-slate-300 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-slate-800">
+                  <pre>
+                    <code>
+{`import 'package:kavach_flutter/kavach_flutter.dart';
+
+final kavach = KavachClient(
+  workspaceId: '${workspaceId}',
+  apiKey: '${apiKey}',
+);
+
+await kavach.initialize();`}
                     </code>
                   </pre>
                 </div>
