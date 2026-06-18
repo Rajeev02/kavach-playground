@@ -19,7 +19,12 @@
     "typescript": "^5.0.0",
     "eslint": "^9",
     "prettier": "^3.0.0",
-    "tailwindcss": "^4",
+    "tailwindcss": "3.3.2",
     "@tailwindcss/postcss": "^4"
+  },
+  "overrides": {
+    "@tailwindcss/postcss": {
+      "tailwindcss": "^4"
+    }
   }
 }
