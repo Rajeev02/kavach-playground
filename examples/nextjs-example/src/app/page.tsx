@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getDeviceFingerprint } from '@/lib/kavach';
 
@@ -11,6 +11,13 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    // If already authenticated, bounce to dashboard
+    if (localStorage.getItem('kavach_auth') === 'true') {
+      router.push('/dashboard');
+    }
+  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +47,7 @@ export default function LoginPage() {
 
       // Even if our local backend verification fails (because the live SDK might generate a real payload we didn't mock),
       // we will let the user pass to the dashboard for the sake of the visual demo.
+      localStorage.setItem('kavach_auth', 'true');
       setTimeout(() => {
         router.push('/dashboard');
       }, 1000);

@@ -1,9 +1,17 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function DashboardPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    // Basic route protection
+    if (localStorage.getItem('kavach_auth') !== 'true') {
+      router.push('/');
+    }
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-slate-950 p-8 text-white">
@@ -20,7 +28,10 @@ export default function DashboardPage() {
             <p className="text-slate-400 text-sm mt-1">Your device was securely fingerprinted by Kavach.</p>
           </div>
           <button 
-            onClick={() => router.push('/')}
+            onClick={() => {
+              localStorage.removeItem('kavach_auth');
+              router.push('/');
+            }}
             className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
           >
             Logout
