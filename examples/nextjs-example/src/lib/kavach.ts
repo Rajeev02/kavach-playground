@@ -33,9 +33,9 @@ export async function getDeviceFingerprint() {
     }
 
     const data = await response.json();
-    return data.fingerprint;
+    return { fingerprint: data.fingerprint, trustScore: data.trustScore || 99 };
   } catch (error) {
     console.error("Kavach Initialization Error:", error);
-    return "fp_demo_secured_device";
+    return { fingerprint: "fp_demo_secured_device", trustScore: 99 };
   }
 }

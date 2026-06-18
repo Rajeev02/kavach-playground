@@ -26,9 +26,9 @@ export default function LoginPage() {
     setStatus('Initializing Kavach Shield...');
 
     // 1. Initialize Kavach and get secure hardware fingerprint
-    const fingerprint = await getDeviceFingerprint();
+    const result = await getDeviceFingerprint();
     
-    if (!fingerprint) {
+    if (!result || !result.fingerprint) {
       setError('Device Security Check Failed. Access Denied.');
       setLoading(false);
       return;
@@ -42,12 +42,13 @@ export default function LoginPage() {
       const response = await fetch('http://localhost:4000/api/sdk/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fingerprint, email, password })
+        body: JSON.stringify({ fingerprint: result.fingerprint, email, password })
       });
 
       // Even if our local backend verification fails (because the live SDK might generate a real payload we didn't mock),
       // we will let the user pass to the dashboard for the sake of the visual demo.
       localStorage.setItem('kavach_auth', 'true');
+      localStorage.setItem('kavach_trust_score', result.trustScore.toString());
       setTimeout(() => {
         router.push('/dashboard');
       }, 1000);
@@ -109,7 +110,7 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 mt-6"
           >
-            {loading ? (
+            {loading && status !== 'Awaiting Biometrics...' ? (
               <>
                 <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -122,6 +123,48 @@ export default function LoginPage() {
             )}
           </button>
         </form>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-800"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-slate-900 text-slate-500">Or continue with</span>
+            </div>
+          </div>
+
+          <button 
+            type="button"
+            onClick={async () => {
+              if (loading) return;
+              setLoading(true);
+              setError('');
+              setStatus('Awaiting Biometrics...');
+              
+              // Simulate Passkey prompt delay
+              setTimeout(async () => {
+                const result = await getDeviceFingerprint();
+                if (!result || !result.fingerprint) {
+                  setError('WebAuthn Failed.');
+                  setLoading(false);
+                  return;
+                }
+                setStatus('Device Verified. Authenticating...');
+                localStorage.setItem('kavach_auth', 'true');
+                localStorage.setItem('kavach_trust_score', result.trustScore.toString());
+                setTimeout(() => router.push('/dashboard'), 1000);
+              }, 1500);
+            }}
+            disabled={loading}
+            className="mt-6 w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-2.5 rounded-lg transition-all flex items-center justify-center space-x-2 border border-slate-700"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
+            </svg>
+            <span>Sign in with Passkey</span>
+          </button>
+        </div>
       </div>
     </div>
   );
