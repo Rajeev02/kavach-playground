@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import swaggerUi from 'swagger-ui-express';
 import { PrismaClient } from '@prisma/client';
 
 // Import our middleware, controllers, and cron jobs
@@ -53,8 +52,9 @@ const swaggerDocument = {
   }
 };
 
-app.use('/', swaggerUi.serve);
-app.get('/', swaggerUi.setup(swaggerDocument));
+app.get('/', (req, res) => {
+  res.json(swaggerDocument);
+});
 
 // Healthcheck
 app.get('/health', (req, res) => {
