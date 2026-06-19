@@ -115,6 +115,7 @@ const swaggerOptions = {
         get: {
           summary: 'Get Security Dashboard statistics',
           security: [{ bearerAuth: [] }],
+          parameters: [{ name: 'Authorization', in: 'header', required: true, description: 'Paste token here with Bearer prefix (e.g. Bearer eyJhb...)', schema: { type: 'string' } }],
           responses: { 
             200: { description: 'Dashboard stats object' },
             401: { description: 'Unauthorized' }
@@ -177,7 +178,10 @@ const swaggerOptions = {
         get: {
           summary: 'Get user profile',
           security: [{ bearerAuth: [] }],
-          parameters: [{ name: 'email', in: 'query', required: true, schema: { type: 'string', example: 'developer@kavachid.com' } }],
+          parameters: [
+            { name: 'Authorization', in: 'header', required: true, description: 'Bearer Token', schema: { type: 'string' } },
+            { name: 'email', in: 'query', required: true, schema: { type: 'string', example: 'developer@kavachid.com' } }
+          ],
           responses: { 200: { description: 'User profile' } }
         }
       },
@@ -185,7 +189,10 @@ const swaggerOptions = {
         get: {
           summary: 'Get active sessions',
           security: [{ bearerAuth: [] }],
-          parameters: [{ name: 'email', in: 'query', required: true, schema: { type: 'string', example: 'developer@kavachid.com' } }],
+          parameters: [
+            { name: 'Authorization', in: 'header', required: true, description: 'Bearer Token', schema: { type: 'string' } },
+            { name: 'email', in: 'query', required: true, schema: { type: 'string', example: 'developer@kavachid.com' } }
+          ],
           responses: { 200: { description: 'Active sessions' } }
         }
       },
@@ -193,7 +200,10 @@ const swaggerOptions = {
         delete: {
           summary: 'Revoke a session',
           security: [{ bearerAuth: [] }],
-          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', example: 'sess_123' } }],
+          parameters: [
+            { name: 'Authorization', in: 'header', required: true, description: 'Bearer Token', schema: { type: 'string' } },
+            { name: 'id', in: 'path', required: true, schema: { type: 'string', example: 'sess_123' } }
+          ],
           responses: { 200: { description: 'Session revoked' } }
         }
       },
@@ -201,6 +211,9 @@ const swaggerOptions = {
         post: {
           summary: 'Transfer funds',
           security: [{ bearerAuth: [] }],
+          parameters: [
+            { name: 'Authorization', in: 'header', required: true, description: 'Bearer Token', schema: { type: 'string' } }
+          ],
           requestBody: {
             required: true,
             content: {
