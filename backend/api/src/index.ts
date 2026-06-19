@@ -122,8 +122,21 @@ const swaggerOptions = {
         }
       },
       '/api/setup-user': {
-        get: {
-          summary: 'Create developer demo user',
+        post: {
+          summary: 'Create custom demo user',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: { 
+                  type: 'object', 
+                  properties: { 
+                    email: { type: 'string', example: 'test@kavachid.com' } 
+                  } 
+                }
+              }
+            }
+          },
           responses: { 200: { description: 'User created' } }
         }
       },
@@ -134,7 +147,12 @@ const swaggerOptions = {
             required: true,
             content: {
               'application/json': {
-                schema: { type: 'object', properties: { workspaceId: { type: 'string' } } }
+                schema: { 
+                  type: 'object', 
+                  properties: { 
+                    workspaceId: { type: 'string', example: 'bf0dee3f-adcc-4e36-a306-ec3e5932b11e' } 
+                  } 
+                }
               }
             }
           },
@@ -238,24 +256,27 @@ app.post('/api/auth/verify', authLimiter, verifyOTP);
 app.post('/api/sdk/init', initSDK);
 app.post('/api/sdk/verify', verifySDK);
 
-// Temporary Setup Route
-app.get('/api/setup-user', async (req, res) => {
+// Dynamic Setup Route
+app.post('/api/setup-user', async (req, res) => {
   try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
     const workspace = await prisma.workspace.findFirst();
     if (!workspace) return res.status(400).json({ error: 'No workspace found' });
 
-    let devUser = await prisma.user.findFirst({ where: { email: 'developer@kavachid.com' } });
+    let devUser = await prisma.user.findFirst({ where: { email } });
     
     if (!devUser) {
       devUser = await prisma.user.create({
         data: {
           workspaceId: workspace.id,
-          email: 'developer@kavachid.com',
+          email,
           password: 'temp_password',
           role: 'developer',
         }
       });
-      return res.json({ message: 'User developer@kavachid.com created successfully!', user: devUser });
+      return res.json({ message: `User ${email} created successfully!`, user: devUser });
     }
     
     res.json({ message: 'User already exists', user: devUser });
