@@ -120,6 +120,77 @@ const swaggerOptions = {
             401: { description: 'Unauthorized' }
           }
         }
+      },
+      '/api/setup-user': {
+        get: {
+          summary: 'Create developer demo user',
+          responses: { 200: { description: 'User created' } }
+        }
+      },
+      '/api/sdk/init': {
+        post: {
+          summary: 'Initialize Kavach SDK',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: { type: 'object', properties: { workspaceId: { type: 'string' } } }
+              }
+            }
+          },
+          responses: { 200: { description: 'SDK initialized' } }
+        }
+      },
+      '/api/sdk/verify': {
+        post: {
+          summary: 'Verify device integrity',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: { type: 'object', properties: { fingerprint: { type: 'string' } } }
+              }
+            }
+          },
+          responses: { 200: { description: 'Verification successful' } }
+        }
+      },
+      '/api/example-app/profile': {
+        get: {
+          summary: 'Get user profile',
+          security: [{ bearerAuth: [] }],
+          responses: { 200: { description: 'User profile' } }
+        }
+      },
+      '/api/example-app/sessions': {
+        get: {
+          summary: 'Get active sessions',
+          security: [{ bearerAuth: [] }],
+          responses: { 200: { description: 'Active sessions' } }
+        }
+      },
+      '/api/example-app/sessions/{id}': {
+        delete: {
+          summary: 'Revoke a session',
+          security: [{ bearerAuth: [] }],
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+          responses: { 200: { description: 'Session revoked' } }
+        }
+      },
+      '/api/example-app/transfer': {
+        post: {
+          summary: 'Transfer funds',
+          security: [{ bearerAuth: [] }],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: { type: 'object', properties: { amount: { type: 'number' }, to: { type: 'string' } } }
+              }
+            }
+          },
+          responses: { 200: { description: 'Transfer successful' } }
+        }
       }
     }
   },
