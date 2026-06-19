@@ -166,17 +166,18 @@ const swaggerOptions = {
             required: true,
             content: {
               'application/json': {
-                schema: { type: 'object', properties: { fingerprint: { type: 'string' } } }
+                schema: { type: 'object', properties: { fingerprint: { type: 'string', example: 'mock-fp-12345' } } }
               }
             }
           },
-          responses: { 200: { description: 'Verification successful' } }
+          responses: { 200: { description: 'Verification successful' }, 404: { description: 'Device not found' } }
         }
       },
       '/api/example-app/profile': {
         get: {
           summary: 'Get user profile',
           security: [{ bearerAuth: [] }],
+          parameters: [{ name: 'email', in: 'query', required: true, schema: { type: 'string', example: 'developer@kavachid.com' } }],
           responses: { 200: { description: 'User profile' } }
         }
       },
@@ -184,6 +185,7 @@ const swaggerOptions = {
         get: {
           summary: 'Get active sessions',
           security: [{ bearerAuth: [] }],
+          parameters: [{ name: 'email', in: 'query', required: true, schema: { type: 'string', example: 'developer@kavachid.com' } }],
           responses: { 200: { description: 'Active sessions' } }
         }
       },
@@ -191,7 +193,7 @@ const swaggerOptions = {
         delete: {
           summary: 'Revoke a session',
           security: [{ bearerAuth: [] }],
-          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', example: 'sess_123' } }],
           responses: { 200: { description: 'Session revoked' } }
         }
       },
@@ -203,11 +205,11 @@ const swaggerOptions = {
             required: true,
             content: {
               'application/json': {
-                schema: { type: 'object', properties: { amount: { type: 'number' }, to: { type: 'string' } } }
+                schema: { type: 'object', properties: { amount: { type: 'number', example: 50 }, to: { type: 'string', example: 'account_123' }, fingerprint: { type: 'string', example: 'mock-fp-12345' } } }
               }
             }
           },
-          responses: { 200: { description: 'Transfer successful' } }
+          responses: { 200: { description: 'Transfer successful' }, 403: { description: 'Device untrusted' } }
         }
       }
     }
