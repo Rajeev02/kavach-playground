@@ -20,9 +20,9 @@ export const SDKTabs = () => {
     'Web': 'https://www.npmjs.com/package/@rajeev02/kavach-web',
     'React Native': 'https://www.npmjs.com/package/@rajeev02/kavach-react-native',
     'iOS': 'https://cocoapods.org/pods/KavachSDK',
-    'Android': 'https://repo1.maven.org/maven2/io/github/rajeev02/kavach/kavach-android/1.0.4/',
+    'Android': 'https://central.sonatype.com/artifact/io.github.rajeev02.kavach/kavach-android',
     'Python': 'https://pypi.org/project/rajeev02-kavach-sdk/',
-    'Go': 'https://pkg.go.dev/github.com/rajeev02/kavach-go',
+    'Go': 'https://pkg.go.dev/github.com/Rajeev02/kavachid/sdks/kavach-go',
     'Flutter': 'https://pub.dev/packages/kavach_flutter'
   };
 

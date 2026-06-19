@@ -24,38 +24,37 @@ app.use(express.json());
 // Apply global rate limiting
 app.use(globalLimiter);
 
-// Swagger API Documentation
-const swaggerDocument = {
-  openapi: '3.0.0',
-  info: {
-    title: 'Kavach API',
-    version: '1.0.0',
-    description: 'API Documentation for the Kavach Playground Backend',
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+
+// Swagger API Documentation Options
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Kavach API',
+      version: '1.0.0',
+      description: 'API Documentation for the Kavach Playground Sandbox Backend',
+    },
+    servers: [
+      {
+        url: 'https://api.demo.kavachid.com',
+        description: 'Production Demo Server',
+      },
+      {
+        url: 'http://localhost:4000',
+        description: 'Local Development Server',
+      }
+    ],
   },
-  paths: {
-    '/health': {
-      get: {
-        summary: 'Healthcheck endpoint',
-        responses: { 200: { description: 'OK' } }
-      }
-    },
-    '/api/auth/login': {
-      post: {
-        summary: 'Request OTP login',
-        responses: { 200: { description: 'OTP sent' } }
-      }
-    },
-    '/api/dashboard/stats': {
-      get: {
-        summary: 'Get Security Dashboard statistics',
-        responses: { 200: { description: 'Dashboard stats object' } }
-      }
-    }
-  }
+  apis: ['./src/index.ts', './src/controllers/*.ts'], // Path to the API docs
 };
 
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 app.get('/', (req, res) => {
-  res.json(swaggerDocument);
+  res.redirect('/api-docs');
 });
 
 // Healthcheck with Database Connection Test

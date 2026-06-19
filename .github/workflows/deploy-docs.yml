@@ -1,0 +1,43 @@
+name: Deploy Kavach Docs to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    # Only run if files in apps/docs change
+    paths:
+      - 'apps/docs/**'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    name: Build and Deploy Docusaurus
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Monorepo Dependencies
+        run: npm install
+
+      - name: Build Docusaurus Website
+        run: npm run build
+        working-directory: apps/docs
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./apps/docs/build
+          publish_branch: gh-pages
+          cname: docs.kavachid.com
