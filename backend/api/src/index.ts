@@ -76,9 +76,14 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui.min.css";
+const JS_URLS = [
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui-bundle.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui-standalone-preset.min.js"
+];
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
   customCssUrl: CSS_URL,
+  customJs: JS_URLS,
   customSiteTitle: "Kavach API Documentation"
 }));
 
