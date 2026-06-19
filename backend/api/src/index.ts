@@ -38,6 +38,10 @@ const swaggerOptions = {
     },
     servers: [
       {
+        url: 'https://kavach-playground-api.vercel.app',
+        description: 'Vercel Deployment Server',
+      },
+      {
         url: 'https://api.demo.kavachid.com',
         description: 'Production Demo Server',
       },
@@ -46,12 +50,37 @@ const swaggerOptions = {
         description: 'Local Development Server',
       }
     ],
+    paths: {
+      '/health': {
+        get: {
+          summary: 'Healthcheck endpoint',
+          responses: { 200: { description: 'OK' } }
+        }
+      },
+      '/api/auth/login': {
+        post: {
+          summary: 'Request OTP login',
+          responses: { 200: { description: 'OTP sent' } }
+        }
+      },
+      '/api/dashboard/stats': {
+        get: {
+          summary: 'Get Security Dashboard statistics',
+          responses: { 200: { description: 'Dashboard stats object' } }
+        }
+      }
+    }
   },
-  apis: ['./src/index.ts', './src/controllers/*.ts'], // Path to the API docs
+  apis: [], // Paths are defined directly above
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui.min.css";
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
+  customCssUrl: CSS_URL,
+  customSiteTitle: "Kavach API Documentation"
+}));
 
 app.get('/', (req, res) => {
   res.redirect('/api-docs');
