@@ -50,6 +50,15 @@ const swaggerOptions = {
         description: 'Local Development Server',
       }
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        }
+      }
+    },
     paths: {
       '/health': {
         get: {
@@ -60,13 +69,56 @@ const swaggerOptions = {
       '/api/auth/login': {
         post: {
           summary: 'Request OTP login',
-          responses: { 200: { description: 'OTP sent' } }
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    email: { type: 'string', example: 'developer@kavachid.com' }
+                  }
+                }
+              }
+            }
+          },
+          responses: { 
+            200: { description: 'OTP sent' },
+            401: { description: 'User not found' }
+          }
+        }
+      },
+      '/api/auth/verify': {
+        post: {
+          summary: 'Verify OTP code',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    email: { type: 'string', example: 'developer@kavachid.com' },
+                    code: { type: 'string', example: '123456' }
+                  }
+                }
+              }
+            }
+          },
+          responses: { 
+            200: { description: 'Returns JWT token' },
+            401: { description: 'Invalid or expired OTP' }
+          }
         }
       },
       '/api/dashboard/stats': {
         get: {
           summary: 'Get Security Dashboard statistics',
-          responses: { 200: { description: 'Dashboard stats object' } }
+          security: [{ bearerAuth: [] }],
+          responses: { 
+            200: { description: 'Dashboard stats object' },
+            401: { description: 'Unauthorized' }
+          }
         }
       }
     }
