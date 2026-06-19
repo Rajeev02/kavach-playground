@@ -17,11 +17,12 @@ async function main() {
 
   const demoPasswordHash = await bcrypt.hash('Demo@123', 10);
 
-  // 2. Create the 3 Demo Users
+  // 2. Create the Demo Users
   const users = [
     { email: 'admin@demo.com', role: 'admin' },
     { email: 'developer@demo.com', role: 'developer' },
     { email: 'user@demo.com', role: 'user' },
+    { email: 'developer@kavachid.com', role: 'developer' },
   ];
 
   for (const u of users) {

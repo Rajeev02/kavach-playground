@@ -167,6 +167,32 @@ app.post('/api/auth/verify', authLimiter, verifyOTP);
 app.post('/api/sdk/init', initSDK);
 app.post('/api/sdk/verify', verifySDK);
 
+// Temporary Setup Route
+app.get('/api/setup-user', async (req, res) => {
+  try {
+    const workspace = await prisma.workspace.findFirst();
+    if (!workspace) return res.status(400).json({ error: 'No workspace found' });
+
+    let devUser = await prisma.user.findFirst({ where: { email: 'developer@kavachid.com' } });
+    
+    if (!devUser) {
+      devUser = await prisma.user.create({
+        data: {
+          workspaceId: workspace.id,
+          email: 'developer@kavachid.com',
+          password: 'temp_password',
+          role: 'developer',
+        }
+      });
+      return res.json({ message: 'User developer@kavachid.com created successfully!', user: devUser });
+    }
+    
+    res.json({ message: 'User already exists', user: devUser });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Protected Dashboard Routes
 app.get('/api/dashboard/stats', authenticateToken, getDashboardStats);
 
