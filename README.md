@@ -1,79 +1,129 @@
 # Kavach Playground
 
-A comprehensive security and authentication ecosystem showcasing the **Kavach SDKs** across web, mobile, and backend environments. 
+A comprehensive security and authentication ecosystem showcasing the Kavach SDKs across web, mobile, and backend environments. 
 
-This repository contains the interactive Developer Playground and the secure Backend API, allowing developers to explore risk distribution, active devices, and API key management in real-time.
+The playground provides an interactive environment to explore risk distribution, active devices, and API key management in real-time, accompanied by a secure backend API that demonstrates SDK integration patterns.
 
 ## Features
 
-- **Passwordless OTP Login:** Secure email-based authentication flow.
-- **Dynamic Security Dashboard:** Real-time visualization of trusted devices, risk scores, and security events.
-- **Live SDK Snippets:** Dynamically generated code snippets injected with your personal workspace credentials for instant copy-pasting.
-- **Interactive API Documentation:** Automatically generated Swagger UI.
-- **Serverless Ready:** Fully optimized for deployment on Vercel.
+- **Passwordless OTP Login** — Implements an email-based authentication flow for user access without passwords.
+- **Device Fingerprinting** — Tracks device trust scores and flags untrusted devices attempting to access protected endpoints.
+- **Workspace Isolation** — Uses a multi-tenant database schema to separate security events, risk events, and devices by workspace.
+- **Dynamic Security Dashboard** — Visualizes real-time metrics including trusted devices, risk scores, and audit logs.
+- **Live SDK Snippets** — Injects workspace credentials into dynamically generated code snippets for immediate copy-pasting.
 
 ## Architecture
 
-This project is a monorepo containing two main packages:
+The project is structured as a monorepo containing the playground frontend, backend API, documentation, and SDK example implementations. 
 
-1. `apps/playground`: The Next.js/React frontend dashboard.
-2. `backend/api`: The Express.js backend powered by Prisma and PostgreSQL.
+Data flows from the client SDKs (or example apps) to the backend API, where the device fingerprint and token are verified before authorizing sensitive actions (e.g., simulated funds transfer).
 
-## Getting Started
+### Components
 
-### Prerequisites
-- Node.js (v18+)
-- PostgreSQL Database (We recommend Neon for serverless compatibility)
+- `apps/playground` — The primary Next.js web application serving the developer dashboard.
+- `apps/docs` — A Docusaurus-based documentation site for the SDKs.
+- `backend/api` — An Express.js backend managing authentication, workspace data, and SDK verification logic.
+- `examples/*` — Reference implementations of the Kavach SDK across multiple platforms (iOS, Android, React Native, Go, Python, etc.).
 
-### 1. Backend Setup
+## Technology Stack
+
+| Category       | Technology |
+| -------------- | ---------- |
+| Language       | TypeScript |
+| Frontend       | Next.js, React, Tailwind CSS |
+| Backend        | Express.js, Node.js |
+| Database       | PostgreSQL, Prisma ORM |
+| Documentation  | Docusaurus, Swagger UI |
+
+## Project Structure
+
+```text
+kavach-playground/
+├── apps/
+│   ├── docs/          # Docusaurus documentation site
+│   └── playground/    # Next.js developer dashboard
+├── backend/
+│   └── api/           # Express.js API and Prisma schema
+├── examples/          # Client SDK implementations across platforms
+├── infrastructure/    # Deployment and Docker configurations
+└── package.json       # Workspace root
+```
+
+## Prerequisites
+
+- Node.js (v20+)
+- Docker (for local PostgreSQL instance)
+
+## Installation
+
+1. Clone the repository:
 
 ```bash
-cd backend/api
+git clone https://github.com/your-org/kavach-playground.git
+cd kavach-playground
+```
+
+2. Install dependencies across all workspaces:
+
+```bash
 npm install
 ```
 
-Copy the environment template and configure your database:
+3. Start the local PostgreSQL database:
+
 ```bash
+docker compose up -d
+```
+
+4. Configure the backend environment:
+
+```bash
+cd backend/api
 cp .env.example .env
 ```
 
-Push the database schema and seed the demo data:
+Ensure `DATABASE_URL` in `.env` points to the local database: `postgresql://postgres:postgrespassword@localhost:5432/kavach_playground`.
+
+5. Initialize the database schema and seed data:
+
 ```bash
 npx prisma db push
 npm run db:seed
 ```
 
-Start the backend server:
-```bash
-npm run dev
-```
+6. Configure the frontend environment:
 
-### 2. Frontend Setup
-
-In a new terminal:
 ```bash
-cd apps/playground
-npm install
-```
-
-Copy the environment template and point it to your local backend:
-```bash
+cd ../../apps/playground
 cp .env.example .env.local
 ```
 
-Start the frontend development server:
+## Quick Start
+
+From the repository root, start all development servers concurrently using npm workspaces:
+
 ```bash
 npm run dev
 ```
 
-Visit `http://localhost:3000` to view the playground!
+- **Playground**: [http://localhost:3000](http://localhost:3000)
+- **Backend API**: [http://localhost:4000](http://localhost:4000)
+- **API Documentation**: [http://localhost:4000/api-docs](http://localhost:4000/api-docs)
+
+## API Reference
+
+The backend exposes a Swagger UI for API exploration. Once the backend is running, visit `/api-docs` to interact with endpoints.
+
+Key routes include:
+
+- `POST /api/auth/login` — Initiates OTP login.
+- `POST /api/sdk/init` — Initializes a workspace session.
+- `POST /api/sdk/verify` — Validates a device fingerprint.
+- `POST /api/example-app/transfer` — A mock protected endpoint that requires a valid session and trusted device.
 
 ## Deployment
 
-This stack is designed to be easily deployed to **Vercel**:
-1. Deploy `apps/playground` as a Next.js framework project.
-2. Deploy `backend/api` as a Node.js project (Ensure you set your `DATABASE_URL` and `JWT_SECRET` in the Vercel environment variables).
+The stack is configured for deployment on serverless platforms.
 
----
-
-Built with ❤️ for the Kavach ecosystem.
+- **Frontend**: Deploy `apps/playground` to Vercel. 
+- **Backend**: Deploy `backend/api` to Vercel or Railway. Set `DATABASE_URL` and `JWT_SECRET` in the environment variables.
